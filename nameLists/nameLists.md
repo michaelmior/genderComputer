@@ -47,6 +47,9 @@
 - Japan:
 	- https://en.wikipedia.org/wiki/Category:Japanese_feminine_given_names
 	- https://en.wikipedia.org/wiki/Category:Japanese_masculine_given_names
+- Korea:
+	- https://en.wikipedia.org/wiki/Category:Korean_feminine_given_names
+	- https://en.wikipedia.org/wiki/Category:Korean_masculine_given_names
 - Latvia:
 	- http://en.wiktionary.org/wiki/Appendix:Latvian_given_names
 	- http://en.wiktionary.org/wiki/Category:Latvian_male_given_names and http://en.wiktionary.org/wiki/Category:Latvian_female_given_names
