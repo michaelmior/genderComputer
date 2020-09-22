@@ -15,6 +15,9 @@
 	- http://www.dicionariodenomesproprios.com.br/nomes-femininos/
 - Canada:
 	- http://www.servicealberta.ca/1166.cfm (1990 lists)
+- China:
+	- https://wehavekids.com/baby-names/200-Chinese-Baby-Boy-Names
+	- https://wehavekids.com/baby-names/200-Chinese-Baby-Girl-Names
 - Czech republic: 
 	- Czech name days http://www.myczechrepublic.com/czech_culture/czech_name_days/alphabetical.html
 	- Diminutives http://www.myczechrepublic.com/czech_culture/czech_name_days/dimf.html and http://www.myczechrepublic.com/czech_culture/czech_name_days/dimm.html
