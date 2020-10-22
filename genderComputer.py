@@ -172,7 +172,7 @@ class GenderComputer():
 						'Canada', 'China', 'Czech', 'Finland', 'Germany', 'Greece', 'Hungary', 'India', 'Iran', 
 						'Ireland', 'Israel', 'Italy', 'Japan', 'Korea', 'Latvia', 'Norway', 'Poland', 'Romania',
 						'Russia', 'Slovenia', 'Somalia', 'Spain', 'Sweden', 'Turkey', 'UK', 
-						'Ukraine', 'USA']
+						'Ukraine', 'USA', 'Custom']
 		for country in listOfCountries:
 			self.nameLists[country] = {}
 			self.nameLists[country]['male'], self.nameLists[country]['female'] = loadData(country, self.dataPath, hasHeader=False)
