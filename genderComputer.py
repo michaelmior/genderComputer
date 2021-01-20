@@ -47,43 +47,42 @@ def formatOutput(gender, simplified=True):
 	else:
 		return gender
 
+def loadGenderList(gender, country, dataPath, hasHeader):
+        fd = open(os.path.join(dataPath, '%s%sUTF8.csv' % (country, gender)), 'r')
+        reader = csv.reader(fd, delimiter=';', dialect=csv.excel)
+        names = {}
+        if hasHeader:
+                unused_header = reader.next()
+        '''Load names as-is, but lower cased'''
+        for row in reader:
+                name = row[0].lower()
+                try:
+                        '''The second column should be the count
+                        (number of babies in some year with this name)'''
+                        count = row[1]
+                except:
+                        '''If second column does not exist, default to count=1'''
+                        count = 1
+                        if name in names:
+                                '''If here then I've seen this name before, modulo case.
+                                Only count once (there is no frequency information anyway)'''
+                                count = 0
+                if name in names:
+                        names[name] += count
+                else:
+                        names[name] = count
+        fd.close()
+        
+        '''Add versions without diacritics'''
+        for name in list(names.keys()):
+                dname = unidecode(name)
+                if dname not in names:
+                        names[dname] = names[name]
+
+        return names
 
 '''Load the male and female name lists for <country>'''
 def loadData(country, dataPath, hasHeader=True):
-	def loadGenderList(gender, country, dataPath, hasHeader):
-		fd = open(os.path.join(dataPath, '%s%sUTF8.csv' % (country, gender)), 'r')
-		reader = csv.reader(fd, delimiter=';', dialect=csv.excel)
-		names = {}
-		if hasHeader:
-			unused_header = reader.next()
-		'''Load names as-is, but lower cased'''
-		for row in reader:
-			name = row[0].lower()
-			try:
-				'''The second column should be the count
-				(number of babies in some year with this name)'''
-				count = row[1]
-			except:
-				'''If second column does not exist, default to count=1'''
-				count = 1
-				if name in names:
-					'''If here then I've seen this name before, modulo case.
-					Only count once (there is no frequency information anyway)'''
-					count = 0
-			if name in names:
-				names[name] += count
-			else:
-				names[name] = count
-		fd.close()
-		
-		'''Add versions without diacritics'''
-		for name in list(names.keys()):
-			dname = unidecode(name)
-			if dname not in names:
-				names[dname] = names[name]
-
-		return names
-
 	males = loadGenderList('Male', country, dataPath, hasHeader)
 	females = loadGenderList('Female', country, dataPath, hasHeader)	
 	return males, females
@@ -176,6 +175,7 @@ class GenderComputer():
 		for country in listOfCountries:
 			self.nameLists[country] = {}
 			self.nameLists[country]['male'], self.nameLists[country]['female'] = loadData(country, self.dataPath, hasHeader=False)
+		self.nameLists['Custom']['unisex'] = loadGenderList('Unisex', country, self.dataPath, hasHeader=False)
 		
 		'''Exceptions (approximations)'''
 		#malesFrance, femalesFrance = loadData('Wallonia', self.dataPath, False)
@@ -569,6 +569,13 @@ class GenderComputer():
 		
 		'''Extract first name from name string'''
 		firstName = extractFirstName(name, 'direct')
+
+		if firstName in self.nameLists['Custom']['male']:
+			return 'male'
+		if firstName in self.nameLists['Custom']['female']:
+			return 'female'
+		if firstName in self.nameLists['Custom']['unisex']:
+			return 'unisex'
 		
 		if country is not None:
 			'''Start with suffixes
