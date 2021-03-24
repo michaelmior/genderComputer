@@ -31,14 +31,14 @@ from filters import normaliseCountryName
 
 def simplifiedGender(gender):
 	if gender is not None:
-		if gender == 'mostly male':
-			return 'male'
-		elif gender == 'mostly female':
-			return 'female'
-		# elif gender == 'unisex':
+		if gender == 'mostly man':
+			return 'man'
+		elif gender == 'mostly woman':
+			return 'woman'
+		# elif gender == 'neutral':
 		# return ''
 		else:
-			return gender # male, female, unisex
+			return gender # man, woman, neutral
 	return None
 
 def formatOutput(gender, simplified=True):
@@ -81,11 +81,11 @@ def loadGenderList(gender, country, dataPath, hasHeader):
 
         return names
 
-'''Load the male and female name lists for <country>'''
+'''Load the man and woman name lists for <country>'''
 def loadData(country, dataPath, hasHeader=True):
-	males = loadGenderList('Male', country, dataPath, hasHeader)
-	females = loadGenderList('Female', country, dataPath, hasHeader)	
-	return males, females
+	men = loadGenderList('Man', country, dataPath, hasHeader)
+	women = loadGenderList('Woman', country, dataPath, hasHeader)	
+	return men, women
 
 
 class GenderComputer():
@@ -174,19 +174,19 @@ class GenderComputer():
 						'Ukraine', 'USA', 'Custom']
 		for country in listOfCountries:
 			self.nameLists[country] = {}
-			self.nameLists[country]['male'], self.nameLists[country]['female'] = loadData(country, self.dataPath, hasHeader=False)
-		self.nameLists['Custom']['unisex'] = loadGenderList('Unisex', country, self.dataPath, hasHeader=False)
+			self.nameLists[country]['man'], self.nameLists[country]['woman'] = loadData(country, self.dataPath, hasHeader=False)
+		self.nameLists['Custom']['neutral'] = loadGenderList('Neutral', country, self.dataPath, hasHeader=False)
 		
 		'''Exceptions (approximations)'''
-		#malesFrance, femalesFrance = loadData('Wallonia', self.dataPath, False)
+		#menFrance, womenFrance = loadData('Wallonia', self.dataPath, False)
 		#self.nameLists['France'] = {}
-		#self.nameLists['France']['male'] 	= malesFrance
-		#self.nameLists['France']['female'] 	= femalesFrance
+		#self.nameLists['France']['man'] 	= menFrance
+		#self.nameLists['France']['woman'] 	= womenFrance
 		
-		malesNL, femalesNL = loadData('Frisia', self.dataPath, False)
+		menNL, womenNL = loadData('Frisia', self.dataPath, False)
 		self.nameLists['The Netherlands'] = {}
-		self.nameLists['The Netherlands']['male'] 	= malesNL
-		self.nameLists['The Netherlands']['female'] = femalesNL
+		self.nameLists['The Netherlands']['man'] 	= menNL
+		self.nameLists['The Netherlands']['woman'] = womenNL
 		
 		'''Black list of first names'''
 		self.blackList = ['The', 'the', 'nil', 'Nil', 'NULL', 'null', 
@@ -194,22 +194,22 @@ class GenderComputer():
 						'stillo', 'alfa', 'beta', 'testing', 'me']
 		
 		'''Gender-specific words'''
-		self.maleWords = ['Mr.', 'mr.', 'Mr', 'mr', 'Sir', 'sir', 'Captain', 'captain', 'wizard', 
+		self.manWords = ['Mr.', 'mr.', 'Mr', 'mr', 'Sir', 'sir', 'Captain', 'captain', 'wizard', 
 						'warrior', 'hillbilly', 'beer', 'Mister', 'Lord', 'Duke', 'Baron', 'coolguy']
-		self.femaleWords = ['girl', 'grrl', 'grrrl', 'miss', 'Miss', 'Mrs.']
+		self.womanWords = ['girl', 'grrl', 'grrrl', 'miss', 'Miss', 'Mrs.']
 		
 		'''Suffixes'''
 		self.suffixes = {}
 		
 		self.suffixes['Russia'] = {}
-		self.suffixes['Russia']['male'] = {}
-		self.suffixes['Russia']['male']['include'] = ['ov','ev','sky','skiy','iy','uy','oy','skij','ij','uj','oj','off'] 
+		self.suffixes['Russia']['man'] = {}
+		self.suffixes['Russia']['man']['include'] = ['ov','ev','sky','skiy','iy','uy','oy','skij','ij','uj','oj','off'] 
 		'''in/yn excluded due to B-Rain and Earwin'''
-		self.suffixes['Russia']['male']['exclude'] = ['Liubov','Ljubov','Lyubov','boy','Boy','toy','Toy','dev','Dev'] 
+		self.suffixes['Russia']['man']['exclude'] = ['Liubov','Ljubov','Lyubov','boy','Boy','toy','Toy','dev','Dev'] 
 		'''['Iakov','Jakov','Yakov','dev','Dev','Lev','boy','Boy','toy','Toy']'''
-		self.suffixes['Russia']['female'] = {}
-		self.suffixes['Russia']['female']['include'] = ['ova','eva','skaya','aya','eya','oya','iaya' ]
-		self.suffixes['Russia']['female']['exclude'] = {}
+		self.suffixes['Russia']['woman'] = {}
+		self.suffixes['Russia']['woman']['include'] = ['ova','eva','skaya','aya','eya','oya','iaya' ]
+		self.suffixes['Russia']['woman']['exclude'] = {}
 		
 		self.suffixes['Belarus'] = self.suffixes['Russia']
 		self.suffixes['Ukraine'] = self.suffixes['Russia']
@@ -223,51 +223,51 @@ class GenderComputer():
 		self.suffixes['Bulgaria'] = self.suffixes['Russia']
 		
 		self.suffixes['Macedonia (FYROM)'] = {}
-		self.suffixes['Macedonia (FYROM)']['male'] = {}
-		self.suffixes['Macedonia (FYROM)']['male']['include'] = ['ov','ev','ski','evsk']
-		self.suffixes['Macedonia (FYROM)']['male']['exclude'] = ['Iakov','Jakov','Yakov','dev','Dev','Lev','boy','Boy','toy','Toy']
-		self.suffixes['Macedonia (FYROM)']['female'] = {}
-		self.suffixes['Macedonia (FYROM)']['female']['include'] = ['ova','eva','ska','evska']
-		self.suffixes['Macedonia (FYROM)']['female']['exclude'] = {}
+		self.suffixes['Macedonia (FYROM)']['man'] = {}
+		self.suffixes['Macedonia (FYROM)']['man']['include'] = ['ov','ev','ski','evsk']
+		self.suffixes['Macedonia (FYROM)']['man']['exclude'] = ['Iakov','Jakov','Yakov','dev','Dev','Lev','boy','Boy','toy','Toy']
+		self.suffixes['Macedonia (FYROM)']['woman'] = {}
+		self.suffixes['Macedonia (FYROM)']['woman']['include'] = ['ova','eva','ska','evska']
+		self.suffixes['Macedonia (FYROM)']['woman']['exclude'] = {}
 		
 		self.suffixes['Poland'] = {}
-		self.suffixes['Poland']['male'] = {}
-		self.suffixes['Poland']['male']['include'] = ['ski','sky','cki','cky']
-		self.suffixes['Poland']['male']['exclude'] = {}
-		self.suffixes['Poland']['female'] = {}
-		self.suffixes['Poland']['female']['include'] = ['cka'] 
+		self.suffixes['Poland']['man'] = {}
+		self.suffixes['Poland']['man']['include'] = ['ski','sky','cki','cky']
+		self.suffixes['Poland']['man']['exclude'] = {}
+		self.suffixes['Poland']['woman'] = {}
+		self.suffixes['Poland']['woman']['include'] = ['cka'] 
 		'''-ska is not included because of Polska = Poland which might be confusing'''
-		self.suffixes['Poland']['female']['exclude'] = {}
+		self.suffixes['Poland']['woman']['exclude'] = {}
 		
 		self.suffixes['Czech Republic'] = {}
-		self.suffixes['Czech Republic']['male'] = {}
-		self.suffixes['Czech Republic']['male']['include'] = ['ov',u'ský','sky',u'ný','ny']
-		self.suffixes['Czech Republic']['male']['include'] = ['ov','sky','ny']
-		self.suffixes['Czech Republic']['male']['exclude'] = {}
-		self.suffixes['Czech Republic']['female'] = {}
-		self.suffixes['Czech Republic']['female']['include'] = ['ova','ska','na',u'ová',u'ská',u'ná']
-		self.suffixes['Czech Republic']['female']['include'] = ['ova','ska','na']
-		self.suffixes['Czech Republic']['female']['exclude'] = {}
+		self.suffixes['Czech Republic']['man'] = {}
+		self.suffixes['Czech Republic']['man']['include'] = ['ov',u'ský','sky',u'ný','ny']
+		self.suffixes['Czech Republic']['man']['include'] = ['ov','sky','ny']
+		self.suffixes['Czech Republic']['man']['exclude'] = {}
+		self.suffixes['Czech Republic']['woman'] = {}
+		self.suffixes['Czech Republic']['woman']['include'] = ['ova','ska','na',u'ová',u'ská',u'ná']
+		self.suffixes['Czech Republic']['woman']['include'] = ['ova','ska','na']
+		self.suffixes['Czech Republic']['woman']['exclude'] = {}
 		
-		'''Male Latvian personal and family names typically end in  -s (-š). Some may be derived 
+		'''Man Latvian personal and family names typically end in  -s (-š). Some may be derived 
 		from Russian names, with an -s ending: e.g. Vladislavs KAZANOVS
 		Only Russian forms are included since we cannot distinguish between the regular Latvian -s and English plural -s'''
 		
 		self.suffixes['Latvia'] = {}
-		self.suffixes['Latvia']['male'] = {}
-		self.suffixes['Latvia']['male']['include'] = [u'š','ovs','ins']
-		self.suffixes['Latvia']['male']['exclude'] = {}
-		self.suffixes['Latvia']['female'] = {}
-		self.suffixes['Latvia']['female']['include'] = ['ina']
-		self.suffixes['Latvia']['female']['exclude'] = {}
+		self.suffixes['Latvia']['man'] = {}
+		self.suffixes['Latvia']['man']['include'] = [u'š','ovs','ins']
+		self.suffixes['Latvia']['man']['exclude'] = {}
+		self.suffixes['Latvia']['woman'] = {}
+		self.suffixes['Latvia']['woman']['include'] = ['ina']
+		self.suffixes['Latvia']['woman']['exclude'] = {}
 		
 		self.suffixes['Lithuania'] = {}
-		self.suffixes['Lithuania']['male'] = {}
-		self.suffixes['Lithuania']['male']['include'] = ['aitis', 'utis', 'ytis', 'enas', 'unas', 'inis', 'ynis', 'onis', 'ius', 'elis']
-		self.suffixes['Lithuania']['male']['exclude'] = {}
-		self.suffixes['Lithuania']['female'] = {}
-		self.suffixes['Lithuania']['female']['include'] = ['iene', 'aite', 'yte', 'ute', 'te']
-		self.suffixes['Lithuania']['female']['exclude'] = {}
+		self.suffixes['Lithuania']['man'] = {}
+		self.suffixes['Lithuania']['man']['include'] = ['aitis', 'utis', 'ytis', 'enas', 'unas', 'inis', 'ynis', 'onis', 'ius', 'elis']
+		self.suffixes['Lithuania']['man']['exclude'] = {}
+		self.suffixes['Lithuania']['woman'] = {}
+		self.suffixes['Lithuania']['woman']['include'] = ['iene', 'aite', 'yte', 'ute', 'te']
+		self.suffixes['Lithuania']['woman']['exclude'] = {}
 		
 		'''All inverse order countries should also be checked for direct order'''
 		self.invOrder = ['Russia','Belarus','Ukraine','Turkmenistan','Kyrgyzstan','Tajikistan','Kazakhstan','Uzbekistan',
@@ -314,40 +314,40 @@ class GenderComputer():
 			except:
 				pass
 		
-		countMale = 0.0
-		countFemale = 0.0
+		countMan = 0.0
+		countWoman = 0.0
 		for name in dims:
 			try:
-				countMale += float(self.nameLists[country]['male'][name])
+				countMan += float(self.nameLists[country]['man'][name])
 			except:
 				pass
 			try:
-				countFemale += float(self.nameLists[country]['female'][name])
+				countWoman += float(self.nameLists[country]['woman'][name])
 			except:
 				pass
 		
-		if countMale > 0:
-			if countFemale > 0:
-				if countMale != 1.0 or countFemale != 1.0:
-					if countMale > countFemale:
-						prob = countFemale / countMale
+		if countMan > 0:
+			if countWoman > 0:
+				if countMan != 1.0 or countWoman != 1.0:
+					if countMan > countWoman:
+						prob = countWoman / countMan
 						if prob < self.threshold:
-							gender = "mostly male"
+							gender = "mostly man"
 						else:
-							gender = "unisex"
+							gender = "neutral"
 					else:
-						prob = countMale / countFemale
+						prob = countMan / countWoman
 						if prob < self.threshold:
-							gender = "mostly female"
+							gender = "mostly woman"
 						else:
-							gender = "unisex"
+							gender = "neutral"
 				else:
-					gender = "unisex"
+					gender = "neutral"
 			else:
-				gender = "male"
+				gender = "man"
 		else:
-			if countFemale > 0:
-				gender = "female"
+			if countWoman > 0:
+				gender = "woman"
 			else:
 				gender = None
 		
@@ -363,7 +363,7 @@ class GenderComputer():
 		return None
 	
 	'''Checks whether a given <fullName> for a given <country>
-	is <gender> (male/female).'''
+	is <gender> (man/woman).'''
 	def checkSuffix(self, fullName, country, gender):
 		for suffix in self.suffixes[country][gender]['include']:
 			if fullName.endswith(suffix):
@@ -373,23 +373,23 @@ class GenderComputer():
 				return gender
 		return None
 	
-	'''Given <fullName>, checks both male and female 
+	'''Given <fullName>, checks both man and woman 
 	name suffixes and infers gender for <country>.'''
 	def suffixLookup(self, fullName, country):
 		if country in self.suffixes:
-			male = self.checkSuffix(fullName, country, 'male')
-			if male is not None:
-				return male
+			man = self.checkSuffix(fullName, country, 'man')
+			if man is not None:
+				return man
 			else:
-				female = self.checkSuffix(fullName, country, 'female')
-				return female
+				woman = self.checkSuffix(fullName, country, 'woman')
+				return woman
 		else:
 			return None
 	
 	
 	'''Search for a given <firstName> in the gender.c database.
 	strict=True 	: look only in <country>
-	simplified=True : reduce 'mostly male' to 'male' and 'mostly female' to 'female' '''
+	simplified=True : reduce 'mostly man' to 'man' and 'mostly woman' to 'woman' '''
 	def genderDotCLookup(self, firstName, country, strict=True, simplified=True):
 		gender = None
 		genderCountry = None
@@ -401,9 +401,9 @@ class GenderComputer():
 			
 			def lab2key(lab):
 				if lab in ['M', '1M', '?M']:
-					return 'mmale'
+					return 'mman'
 				elif lab in ['F', '1F', '?F']:
-					return 'mfemale'
+					return 'mwoman'
 				elif lab == '?':
 					return 'uni'
 			
@@ -418,16 +418,16 @@ class GenderComputer():
 						d[lab2key(mf)] += int(hexFreq, 16)
 			
 			thr = 256
-			if d['mmale'] - d['mfemale'] > thr:
-				gender = 'male'
-			elif (thr >= d['mmale']-d['mfemale']) and (d['mmale'] > d['mfemale']):
-				gender = 'mostly male'
-			elif d['mfemale'] - d['mmale'] > thr:
-				gender = 'female'
-			elif (thr >= d['mfemale']-d['mmale']) and (d['mfemale'] > d['mmale']):
-				gender = 'mostly female'
+			if d['mman'] - d['mwoman'] > thr:
+				gender = 'man'
+			elif (thr >= d['mman']-d['mwoman']) and (d['mman'] > d['mwoman']):
+				gender = 'mostly man'
+			elif d['mwoman'] - d['mman'] > thr:
+				gender = 'woman'
+			elif (thr >= d['mwoman']-d['mman']) and (d['mwoman'] > d['mman']):
+				gender = 'mostly woman'
 			else:
-				gender = 'unisex'
+				gender = 'neutral'
 			
 			'''Options:
 			1. I query for an existing name in a known country
@@ -448,15 +448,15 @@ class GenderComputer():
 					'''The name is known for this country, and so is its gender'''
 					genderCode = countryData[0][0]
 					if genderCode == 'M':
-						genderCountry = "male"
+						genderCountry = "man"
 					elif genderCode in ['1M', '?M']:
-						genderCountry = "mostly male"
+						genderCountry = "mostly man"
 					elif genderCode == 'F':
-						genderCountry = "female"
+						genderCountry = "woman"
 					elif genderCode in ['1F', '?F']:
-						genderCountry = "mostly female"
+						genderCountry = "mostly woman"
 					elif genderCode == '?':
-						genderCountry = "unisex"
+						genderCountry = "neutral"
 		except:
 			gender = None
 		
@@ -469,16 +469,16 @@ class GenderComputer():
 	def initialCheck(self, firstName):
 		if firstName in self.blackList or len(firstName) < 2:
 			return 'blacklist'
-		elif firstName in self.maleWords:
-			return 'male'
-		elif firstName in self.femaleWords:
-			return 'female'
+		elif firstName in self.manWords:
+			return 'man'
+		elif firstName in self.womanWords:
+			return 'woman'
 		for word in ['girl']:
 			if firstName.endswith(word) or firstName.startswith(word):
-				return 'female'
+				return 'woman'
 		for word in ['guy', 'captain']:
 			if firstName.endswith(word) or firstName.startswith(word):
-				return 'male'
+				return 'man'
 		return None
 	
 	
@@ -562,20 +562,20 @@ class GenderComputer():
 		
 		'''Initial check for gender-specific words at the beginning of the name'''
 		f = name.split()[0]
-		if f in self.maleWords:
-			return 'male'
-		elif f in self.femaleWords:
-			return 'female'
+		if f in self.manWords:
+			return 'man'
+		elif f in self.womanWords:
+			return 'woman'
 		
 		'''Extract first name from name string'''
 		firstName = extractFirstName(name, 'direct')
 
-		if firstName in self.nameLists['Custom']['male']:
-			return 'male'
-		if firstName in self.nameLists['Custom']['female']:
-			return 'female'
-		if firstName in self.nameLists['Custom']['unisex']:
-			return 'unisex'
+		if firstName in self.nameLists['Custom']['man']:
+			return 'man'
+		if firstName in self.nameLists['Custom']['woman']:
+			return 'woman'
+		if firstName in self.nameLists['Custom']['neutral']:
+			return 'neutral'
 		
 		if country is not None:
 			'''Start with suffixes
@@ -617,11 +617,11 @@ class GenderComputer():
 							if gender is not None:
 								if gender != 'blacklist':
 									bestMatch.append(gender)
-					gender = next((g for g in bestMatch if g != 'unisex'), None)
+					gender = next((g for g in bestMatch if g != 'neutral'), None)
 					if gender is not None:
 						return gender
-					if 'unisex' in bestMatch:
-						return 'unisex'
+					if 'neutral' in bestMatch:
+						return 'neutral'
 				
 				'''- Try to guess first name from: bogdanv, vbogdan'''
 				# bogdanv
